@@ -3,6 +3,7 @@ import React from 'react';
 import Button from '../Button';
 import Toast from '../Toast/Toast';
 import styles from './ToastPlayground.module.css';
+import ToastShelf from '../ToastShelf/ToastShelf';
 
 const VARIANT_OPTIONS = ['notice', 'warning', 'success', 'error'];
 
@@ -10,6 +11,20 @@ function ToastPlayground() {
   const [message, setMessage] = React.useState('');
   const [variant, setVariant] = React.useState('notice');
   const [isPreviewShown, setIsPreviewShown] = React.useState(false);
+  const [toasts, setToasts] = React.useState([]);
+
+  function addToast(variant, message) {
+    setToasts((currToasts) => [
+      ...currToasts,
+      { variant, message, toastId: crypto.randomUUID() },
+    ]);
+  }
+
+  function removeToast(toastId) {
+    setToasts((currToasts) => {
+      return currToasts.filter((toast) => toast.toastId !== toastId);
+    });
+  }
 
   return (
     <div className={styles.wrapper}>
@@ -18,9 +33,21 @@ function ToastPlayground() {
         <h1>Toast Playground</h1>
       </header>
 
-      {isPreviewShown && <Toast message={message} variant={variant} setIsPreviewShown={setIsPreviewShown}/>}
+      <ToastShelf toasts={toasts} removeToast={removeToast} />
+      {isPreviewShown && (
+        <Toast
+          message={message}
+          variant={variant}
+          setIsPreviewShown={setIsPreviewShown}
+        />
+      )}
 
-      <div className={styles.controlsWrapper}>
+      <form
+        className={styles.controlsWrapper}
+        onSubmit={(event) => {
+          event.preventDefault()
+          addToast(variant, message)}}
+      >
         <div className={styles.row}>
           <label
             htmlFor="message"
@@ -65,11 +92,11 @@ function ToastPlayground() {
 
         <div className={styles.row}>
           <div className={styles.label} />
-          <div className={`${styles.inputWrapper} ${styles.radioWrapper}`} onClick={() => setIsPreviewShown(true)}>
-            <Button>Pop Toast!</Button>
+          <div className={`${styles.inputWrapper} ${styles.radioWrapper}`}>
+            <Button type="submit">Pop Toast!</Button>
           </div>
         </div>
-      </div>
+      </form>
     </div>
   );
 }

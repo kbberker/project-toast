@@ -18,7 +18,7 @@ const ICONS_BY_VARIANT = {
   error: AlertOctagon,
 };
 
-function Toast({ message, variant = "notice", setIsPreviewShown }) {
+function Toast({ message, variant = "notice", setIsPreviewShown, removeToast }) {
   if(!Object.keys(ICONS_BY_VARIANT).includes(variant)) {
     throw Error(`${variant} is not an accepted variant value`)
   }
@@ -31,7 +31,7 @@ function Toast({ message, variant = "notice", setIsPreviewShown }) {
         <Icon size={24} />
       </div>
       <p className={styles.content}>{message}</p>
-      <button className={styles.closeButton} onClick={() => setIsPreviewShown(false)}>
+      <button className={styles.closeButton} onClick={() => removeToast()}>
         <X size={24} />
         <VisuallyHidden>Dismiss message</VisuallyHidden>
       </button>
