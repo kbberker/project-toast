@@ -18,22 +18,34 @@ const ICONS_BY_VARIANT = {
   error: AlertOctagon,
 };
 
-function Toast({ message, variant = "notice", setIsPreviewShown, removeToast }) {
-  if(!Object.keys(ICONS_BY_VARIANT).includes(variant)) {
-    throw Error(`${variant} is not an accepted variant value`)
+function Toast({
+  message,
+  variant = 'notice',
+  setIsPreviewShown,
+  removeToast,
+}) {
+  if (!Object.keys(ICONS_BY_VARIANT).includes(variant)) {
+    throw Error(`${variant} is not an accepted variant value`);
   }
 
-  const Icon = ICONS_BY_VARIANT[variant]
+  const Icon = ICONS_BY_VARIANT[variant];
 
   return (
     <div className={`${styles.toast} ${styles[variant]}`}>
       <div className={styles.iconContainer}>
         <Icon size={24} />
       </div>
-      <p className={styles.content}>{message}</p>
-      <button className={styles.closeButton} onClick={() => removeToast()}>
+      <p className={styles.content}>
+        <VisuallyHidden>{`${variant} - `}</VisuallyHidden>
+        {message}
+      </p>
+      <button
+        aria-label="Dismiss message"
+        aria-live="off"
+        className={styles.closeButton}
+        onClick={() => removeToast()}
+      >
         <X size={24} />
-        <VisuallyHidden>Dismiss message</VisuallyHidden>
       </button>
     </div>
   );
